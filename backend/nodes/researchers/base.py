@@ -184,11 +184,21 @@ class BaseResearcher:
                     }
                 )
 
+            # Add news topic for news analysts
+            search_params = {
+                "search_depth": "basic",
+                "include_raw_content": False,
+                "max_results": 15
+            }
+            
+            if self.analyst_type == "news_analyst":
+                search_params["topic"] = "news"
+            elif self.analyst_type == "financial_analyst":
+                search_params["topic"] = "finance"
+
             results = await self.tavily_client.search(
                 query,
-                search_depth="basic",
-                include_raw_content=False,
-                max_results=15
+                **search_params
             )
             
             docs = {}

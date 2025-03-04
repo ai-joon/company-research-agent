@@ -107,7 +107,7 @@ Key requirements:
 
 ### Funding & Investment
 * Total funding amount with date
-* List each funding round with date (being careful to not repeat the same round)
+* List each funding round with date
 * List named investors
 
 ### Revenue Model
@@ -116,7 +116,9 @@ Key requirements:
 2. Include specific numbers when possible
 3. No paragraphs, only bullet points
 4. Never mention "no information found" or "no data available"
-5. Provide only the briefing. No explanation or commentary.""",
+5. NEVER repeat the same round of funding multiple times. ALWAYS assume that multiple funding rounds in the same month are the same round.
+6. NEVER include a range of funding amounts. Use your best judgement to determine the exact amount based on the information provided.
+6. Provide only the briefing. No explanation or commentary.""",
 
             'news': f"""Create a focused news briefing for {company}, a {industry} company based in {hq_location}.
 Key requirements:

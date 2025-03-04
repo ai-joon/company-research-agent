@@ -4,7 +4,7 @@
 
 A multi-agent tool that generates comprehensive company research reports. The platform uses a pipeline of AI agents to gather, curate, and synthesize information about any company.
 
-## Features ✨
+## Features
 
 - **Multi-Source Research**: Gathers data from various sources including company websites, news articles, financial reports, and industry analyses
 - **AI-Powered Content Filtering**: Uses Tavily's relevance scoring for content curation
@@ -15,7 +15,7 @@ A multi-agent tool that generates comprehensive company research reports. The pl
 - **Modern React Frontend**: Responsive UI with real-time updates, progress tracking, and download options
 - **Modular Architecture**: Built using a pipeline of specialized research and processing nodes
 
-## Agent Framework 🕸️
+## Agent Framework
 
 ### Research Pipeline
 
@@ -35,7 +35,7 @@ The platform follows an agentic framework with specialized nodes that process da
 
    ![web ui](<static/agent-flow.png>)
 
-### Content Generation Architecture 🤖
+### Content Generation Architecture
 
 The platform leverages separate models for optimal performance:
 
@@ -57,7 +57,7 @@ The platform leverages separate models for optimal performance:
 
 This approach combines Gemini's strength in handling large context windows with GPT-4o-mini's precision in following specific formatting instructions.
 
-### Content Curation System 🎯
+### Content Curation System
 
 The platform uses a content filtering system in `curator.py`:
 
@@ -73,7 +73,7 @@ The platform uses a content filtering system in `curator.py`:
    - Documents are sorted by relevance scores
    - Real-time progress updates are sent via WebSocket
 
-### Real-Time Communication System 📡
+### Real-Time Communication System
 
 The platform implements a WebSocket-based real-time communication system:
 
@@ -110,7 +110,7 @@ The platform implements a WebSocket-based real-time communication system:
    - `report_chunk`: Streaming report generation
    - `curation_complete`: Final document statistics
 
-## Setup 🚀
+## Setup
 
 ### Quick Setup (Recommended)
 
@@ -177,7 +177,7 @@ OPENAI_API_KEY=your_openai_key
 # MONGODB_URI=your_mongodb_connection_string
 ```
 
-### Docker Setup 🐳
+### Docker Setup
 
 The application can be run using Docker and Docker Compose:
 
@@ -235,7 +235,7 @@ npm run dev
 
 3. Access the application at `http://localhost:5173`
 
-## Usage 💡
+## Usage
 
 ### Local Development
 
@@ -267,7 +267,7 @@ npm run dev
 
 3. Access the application at `http://localhost:5173`
 
-### Deployment Options 🚀
+### Deployment Options
 
 The application can be deployed to various cloud platforms. Here are some common options:
 
@@ -296,7 +296,7 @@ The application can be deployed to various cloud platforms. Here are some common
 
 Choose the platform that best suits your needs. The application is platform-agnostic and can be hosted anywhere that supports Python web applications.
 
-## Contributing 🤝
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -304,12 +304,11 @@ Choose the platform that best suits your needs. The application is platform-agno
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License 📝
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments 🙏
+## Acknowledgments
 
 - [Tavily](https://tavily.com/) for the research API
-- [Google Gemini](https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/gemini) for the text generation model
 - All other open-source libraries and their contributors
