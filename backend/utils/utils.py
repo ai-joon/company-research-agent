@@ -1,7 +1,6 @@
 import logging
 import os
 import re
-import datetime
 from typing import List, Dict
 from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
