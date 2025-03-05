@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Building2,
   Globe,
-  MapPin,
   Factory,
   Search,
   Loader2,
@@ -18,6 +17,7 @@ import {
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from 'rehype-raw';
 import remarkGfm from 'remark-gfm';
+import LocationInput from './components/LocationInput';
 
 type ResearchStatus = {
   step: string;
@@ -880,7 +880,6 @@ function App() {
   const glassStyle = "backdrop-filter backdrop-blur-lg bg-white/80 border border-gray-200 shadow-xl";
   const glassCardStyle = `${glassStyle} rounded-2xl p-6`;
   const glassInputStyle = `${glassStyle} pl-10 w-full rounded-lg py-3 px-4 text-gray-900 focus:border-[#468BFF]/50 focus:outline-none focus:ring-1 focus:ring-[#468BFF]/50 placeholder-gray-400 bg-white/80 shadow-none`;
-  const glassButtonStyle = "w-full mt-6 inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-[#468BFF] to-[#8FBCFA] px-6 py-3 text-sm font-semibold text-white shadow-lg hover:from-[#8FBCFA] hover:to-[#468BFF] focus:outline-none focus:ring-2 focus:ring-[#468BFF]/50 focus:ring-offset-2 focus:ring-offset-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 backdrop-blur-sm";
 
   // Add these to your existing styles
   const fadeInAnimation = "transition-all duration-300 ease-in-out";
@@ -942,13 +941,20 @@ function App() {
                     const text = String(children);
                     // Check if this is the first h1 by looking for "Research Report"
                     const isFirstH1 = text.includes("Research Report");
+                    // Check if this is the References heading
+                    const isReferences = text.includes("References");
                     return (
-                      <h1 
-                        className={`font-bold text-gray-900 break-words ${isFirstH1 ? 'text-5xl mb-10 mt-8' : 'text-3xl mb-6'}`} 
-                        {...props} 
-                      >
-                        {children}
-                      </h1>
+                      <div>
+                        <h1 
+                          className={`font-bold text-gray-900 break-words whitespace-pre-wrap ${isFirstH1 ? 'text-5xl mb-10 mt-4 max-w-[calc(100%-8rem)]' : 'text-3xl mb-6'}`} 
+                          {...props} 
+                        >
+                          {children}
+                        </h1>
+                        {isReferences && (
+                          <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-gray-300 to-transparent my-8"></div>
+                        )}
+                      </div>
                     );
                   },
                   h2: ({node, ...props}) => (
@@ -1270,9 +1276,9 @@ function App() {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(70,139,255,0.35)_1px,transparent_0)] bg-[length:24px_24px] bg-center"></div>
       <div className="max-w-5xl mx-auto space-y-8 relative">
         {/* Header with GitHub Link */}
-        <div className="relative mb-12">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">
+        <div className="relative mb-16">
+          <div className="text-center pt-4">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#1a365d] via-[#2563eb] to-[#1a365d] bg-clip-text text-transparent mb-4">
               Company Research Agent
             </h1>
             <p className="text-gray-600 text-lg">
@@ -1284,7 +1290,7 @@ function App() {
               href="https://tavily.com"
               target="_blank"
               rel="noopener noreferrer"
-              className={`text-gray-600 hover:text-gray-900 transition-colors ${glassStyle} w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden`}
+              className={`text-gray-600 hover:text-gray-900 transition-colors ${glassStyle} w-12 h-12 rounded-lg flex items-center justify-center overflow-hidden`}
               aria-label="Tavily Website"
             >
               <img src="/tavilylogo.png" alt="Tavily Logo" className="w-full h-full object-cover" />
@@ -1293,10 +1299,10 @@ function App() {
               href="https://github.com/pogjester"
               target="_blank"
               rel="noopener noreferrer"
-              className={`text-gray-600 hover:text-gray-900 transition-colors ${glassStyle} p-2 rounded-lg`}
+              className={`text-gray-600 hover:text-gray-900 transition-colors ${glassStyle} p-3 rounded-lg`}
               aria-label="GitHub Profile"
             >
-              <Github className="h-6 w-6" />
+              <Github className="h-7 w-7" />
             </a>
           </div>
         </div>
@@ -1368,23 +1374,16 @@ function App() {
                 >
                   Company HQ
                 </label>
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-gray-50/0 via-gray-100/50 to-gray-50/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg"></div>
-                  <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 stroke-[#468BFF] transition-all duration-200 group-hover:stroke-[#8FBCFA] z-10" strokeWidth={1.5} />
-                  <input
-                    id="companyHq"
-                    type="text"
-                    value={formData.companyHq}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        companyHq: e.target.value,
-                      }))
-                    }
-                    className={`${glassInputStyle} transition-all duration-300 focus:border-[#468BFF]/50 focus:ring-1 focus:ring-[#468BFF]/50 group-hover:border-[#468BFF]/30 bg-white/80 backdrop-blur-sm text-lg py-4 pl-12`}
-                    placeholder="City, Country"
-                  />
-                </div>
+                <LocationInput
+                  value={formData.companyHq}
+                  onChange={(value) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      companyHq: value,
+                    }))
+                  }
+                  className={`${glassInputStyle} transition-all duration-300 focus:border-[#468BFF]/50 focus:ring-1 focus:ring-[#468BFF]/50 group-hover:border-[#468BFF]/30 bg-white/80 backdrop-blur-sm text-lg py-4 pl-12`}
+                />
               </div>
 
               {/* Company Industry */}

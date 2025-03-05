@@ -6,6 +6,8 @@ anyio==4.8.0
 asgiref==3.8.1
 attrs==25.1.0
 blinker==1.9.0
+boto3==1.34.69
+botocore==1.34.69
 certifi==2025.1.31
 charset-normalizer==3.4.1
 click==8.1.8

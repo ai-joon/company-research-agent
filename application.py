@@ -1,16 +1,11 @@
-from dotenv import load_dotenv
-import os
-
-# Load environment variables before any other imports
-load_dotenv()
-
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel
 from backend.graph import Graph
 from backend.services.websocket_manager import WebSocketManager
 import logging
+import os
 import uvicorn
 from datetime import datetime
 import asyncio
@@ -20,25 +15,22 @@ from backend.services.mongodb import MongoDBService
 from contextlib import asynccontextmanager
 from backend.services.pdf_service import PDFService
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+debug_mode = False
+if os.getenv("TAVILY_DEBUG", 'FALSE').upper() == "TRUE":
+    print("[ Running in DEBUG mode ]")
+    debug_mode = True
 
-REPORTS_DIR = "reports"
-os.makedirs(REPORTS_DIR, exist_ok=True)
+import logging
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    logger.info("Starting up Tavily Company Research API")
-    yield
-    logger.info("Shutting down Tavily Company Research API")
-    for job_connections in manager.active_connections.values():
-        for connection in job_connections:
-            try:
-                await connection.close()
-            except Exception:
-                pass
+logger = logging.getLogger()
+if debug_mode:
+    logger.setLevel(logging.DEBUG)
+else:
+    logger.setLevel(logging.INFO)
+console_handler = logging.StreamHandler()
+logger.addHandler(console_handler)
 
-app = FastAPI(title="Tavily Company Research API", lifespan=lifespan)
+app = FastAPI(title="Tavily Company Research API")
 
 app.add_middleware(
     CORSMiddleware,
@@ -49,7 +41,7 @@ app.add_middleware(
 )
 
 manager = WebSocketManager()
-pdf_service = PDFService({"pdf_output_dir": REPORTS_DIR})
+pdf_service = PDFService({"pdf_output_dir": "pdfs"})
 
 job_status = defaultdict(lambda: {
     "status": "pending",
@@ -185,7 +177,7 @@ async def process_research(job_id: str, data: ResearchRequest):
 
 @app.get("/research/pdf/{filename}")
 async def get_pdf(filename: str):
-    pdf_path = os.path.join(REPORTS_DIR, filename)
+    pdf_path = os.path.join("pdfs", filename)
     if not os.path.exists(pdf_path):
         raise HTTPException(status_code=404, detail="PDF not found")
     return FileResponse(pdf_path, media_type='application/pdf', filename=filename)
@@ -246,23 +238,22 @@ async def generate_pdf(job_id: str):
 
 @app.post("/generate-pdf")
 async def generate_pdf(data: GeneratePDFRequest):
-    """Generate a PDF from markdown content."""
+    """Generate a PDF from markdown content and stream it to the client."""
     try:
-        success, result = pdf_service.generate_pdf(data.report_content, data.company_name)
+        success, result = pdf_service.generate_pdf_stream(data.report_content, data.company_name)
         if success:
-            pdf_path = result
-            pdf_filename = os.path.basename(pdf_path)
-            return {"status": "success", "pdf_url": f"/research/pdf/{pdf_filename}"}
+            pdf_buffer, filename = result
+            return StreamingResponse(
+                pdf_buffer,
+                media_type='application/pdf',
+                headers={
+                    'Content-Disposition': f'attachment; filename="{filename}"'
+                }
+            )
         else:
-            error_msg = result
-            raise HTTPException(status_code=500, detail=error_msg)
+            raise HTTPException(status_code=500, detail=result)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-if __name__ == '__main__':
-    uvicorn.run(
-        "application:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True
-    )
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)

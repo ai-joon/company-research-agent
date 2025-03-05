@@ -2,9 +2,9 @@ import logging
 import os
 import re
 from fastapi import HTTPException
-from backend.utils.utils import (
-    generate_pdf_from_md,
-)
+from backend.utils.utils import generate_pdf_from_md
+from fastapi.responses import StreamingResponse
+import io
 
 logger = logging.getLogger(__name__)
 
@@ -25,16 +25,16 @@ class PDFService:
         sanitized_name = self._sanitize_company_name(company_name)
         return f"{sanitized_name}_report.pdf"
     
-    def generate_pdf(self, markdown_content, company_name=None):
+    def generate_pdf_stream(self, markdown_content, company_name=None):
         """
-        Generate a PDF from markdown content.
+        Generate a PDF from markdown content and return it as a stream.
         
         Args:
             markdown_content (str): The markdown content to convert to PDF
             company_name (str, optional): The company name to use in the filename
             
         Returns:
-            tuple: (success status, pdf_path or error message)
+            tuple: (success status, PDF stream or error message)
         """
         try:
             # Extract company name from the first line if not provided
@@ -47,13 +47,18 @@ class PDFService:
             
             # Generate the output filename
             pdf_filename = self._generate_pdf_filename(company_name)
-            pdf_path = os.path.join(self.output_dir, pdf_filename)
             
-            # Generate the PDF
-            generate_pdf_from_md(markdown_content, pdf_path)
+            # Create a BytesIO object to store the PDF
+            pdf_buffer = io.BytesIO()
             
-            # Return success and the path
-            return True, pdf_path
+            # Generate the PDF directly to the buffer
+            generate_pdf_from_md(markdown_content, pdf_buffer)
+            
+            # Reset buffer position to start
+            pdf_buffer.seek(0)
+            
+            # Return success and the buffer
+            return True, (pdf_buffer, pdf_filename)
             
         except Exception as e:
             error_msg = f"Error generating PDF: {str(e)}"
@@ -94,7 +99,18 @@ class PDFService:
                 except Exception as e:
                     logger.warning(f"Failed to get company name from MongoDB: {e}")
 
-            return self.generate_pdf(report_content, company_name)
+            success, result = self.generate_pdf_stream(report_content, company_name)
+            if success:
+                pdf_buffer, filename = result
+                return StreamingResponse(
+                    pdf_buffer,
+                    media_type='application/pdf',
+                    headers={
+                        'Content-Disposition': f'attachment; filename="{filename}"'
+                    }
+                )
+            else:
+                raise HTTPException(status_code=500, detail=result)
 
         except HTTPException:
             raise
