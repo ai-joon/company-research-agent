@@ -756,10 +756,17 @@ function App() {
       const url = `${API_URL}/research`;
       console.log("Attempting fetch to:", url);
 
+      // Format the company URL if provided
+      const formattedCompanyUrl = formData.companyUrl
+        ? formData.companyUrl.startsWith('http://') || formData.companyUrl.startsWith('https://')
+          ? formData.companyUrl
+          : `https://${formData.companyUrl}`
+        : undefined;
+
       // Log the request details
       const requestData = {
         company: formData.companyName,
-        company_url: formData.companyUrl || undefined,
+        company_url: formattedCompanyUrl,
         industry: formData.companyIndustry || undefined,
         hq_location: formData.companyHq || undefined,
       };
@@ -894,34 +901,27 @@ function App() {
               <>
                 <button
                   onClick={handleCopyToClipboard}
-                  className="inline-flex items-center px-4 py-2 rounded-lg bg-[#468BFF] text-white hover:bg-[#8FBCFA] transition-all duration-200"
+                  className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#468BFF] text-white hover:bg-[#8FBCFA] transition-all duration-200"
                 >
                   {isCopied ? (
-                    <>
-                      <Check className="h-4 w-4 mr-2" />
-                      Copied!
-                    </>
+                    <Check className="h-5 w-5" />
                   ) : (
-                    <>
-                      <Copy className="h-4 w-4 mr-2" />
-                      Copy Report
-                    </>
+                    <Copy className="h-5 w-5" />
                   )}
                 </button>
                 <button
                   onClick={handleGeneratePdf}
                   disabled={isGeneratingPdf}
-                  className="inline-flex items-center px-4 py-2 rounded-lg bg-[#FFB800] text-white hover:bg-[#FFA800] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="inline-flex items-center justify-center px-4 py-2 rounded-lg bg-[#FFB800] text-white hover:bg-[#FFA800] transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isGeneratingPdf ? (
                     <>
-                      <Loader2 className="animate-spin h-4 w-4 mr-2" style={{ stroke: loaderColor }} />
+                      <Loader2 className="animate-spin h-5 w-5 mr-2" style={{ stroke: loaderColor }} />
                       Generating PDF...
                     </>
                   ) : (
                     <>
-                      <Download className="h-4 w-4 mr-2" />
-                      Download PDF
+                      <Download className="h-5 w-5 mr-2" />
                     </>
                   )}
                 </button>
@@ -1346,7 +1346,7 @@ function App() {
                   <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 stroke-[#468BFF] transition-all duration-200 group-hover:stroke-[#8FBCFA] z-10" strokeWidth={1.5} />
                   <input
                     id="companyUrl"
-                    type="url"
+                    type="text"
                     value={formData.companyUrl}
                     onChange={(e) =>
                       setFormData((prev) => ({
@@ -1355,7 +1355,7 @@ function App() {
                       }))
                     }
                     className={`${glassInputStyle} transition-all duration-300 focus:border-[#468BFF]/50 focus:ring-1 focus:ring-[#468BFF]/50 group-hover:border-[#468BFF]/30 bg-white/80 backdrop-blur-sm text-lg py-4 pl-12`}
-                    placeholder="https://example.com"
+                    placeholder="example.com"
                   />
                 </div>
               </div>
@@ -1418,19 +1418,19 @@ function App() {
             <button
               type="submit"
               disabled={isResearching || !formData.companyName}
-              className="relative group w-fit mx-auto block overflow-hidden rounded-lg bg-[#468BFF] text-white transition-all duration-500 hover:bg-[#8FBCFA] disabled:opacity-50 disabled:cursor-not-allowed px-12"
+              className="relative group w-fit mx-auto block overflow-hidden rounded-lg bg-white/80 backdrop-blur-sm border border-gray-200 transition-all duration-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed px-12"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#468BFF]/0 via-white/20 to-[#468BFF]/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-50/0 via-gray-100/50 to-gray-50/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
               <div className="relative flex items-center justify-center py-3.5">
                 {isResearching ? (
                   <>
-                    <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5 loader-icon" style={{ stroke: "white" }} />
-                    <span className="text-base font-medium text-white">Researching...</span>
+                    <Loader2 className="animate-spin -ml-1 mr-2 h-5 w-5 loader-icon" style={{ stroke: loaderColor }} />
+                    <span className="text-base font-medium text-gray-900/90">Researching...</span>
                   </>
                 ) : (
                   <>
-                    <Search className="-ml-1 mr-2 h-5 w-5 text-white" />
-                    <span className="text-base font-medium text-white">Start Research</span>
+                    <Search className="-ml-1 mr-2 h-5 w-5 text-gray-900/90" />
+                    <span className="text-base font-medium text-gray-900/90">Start Research</span>
                   </>
                 )}
               </div>
