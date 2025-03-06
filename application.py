@@ -1,3 +1,12 @@
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file at startup
+env_path = Path(__file__).parent / '.env'
+if env_path.exists():
+    load_dotenv(dotenv_path=env_path, override=True)
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
@@ -5,7 +14,6 @@ from pydantic import BaseModel
 from backend.graph import Graph
 from backend.services.websocket_manager import WebSocketManager
 import logging
-import os
 import uvicorn
 from datetime import datetime
 import asyncio
@@ -14,8 +22,7 @@ from collections import defaultdict
 from backend.services.mongodb import MongoDBService
 from backend.services.pdf_service import PDFService
 
-import logging
-
+# Configure logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
