@@ -22,6 +22,7 @@ const ResearchBriefings: React.FC<ResearchBriefingsProps> = ({
   isResetting
 }) => {
   const glassStyle = "backdrop-filter backdrop-blur-lg bg-white/80 border border-gray-200 shadow-xl";
+  const cardGlassStyle = "backdrop-filter backdrop-blur-lg bg-white/80 shadow-sm";
 
   return (
     <div 
@@ -52,10 +53,10 @@ const ResearchBriefings: React.FC<ResearchBriefingsProps> = ({
           {['company', 'industry', 'financial', 'news'].map((category) => (
             <div 
               key={category} 
-              className={`${glassStyle} rounded-lg p-3 transition-all duration-300 relative ${
+              className={`${cardGlassStyle} rounded-lg p-3 transition-all duration-300 relative ${
                 briefingStatus[category as keyof BriefingStatus] 
-                  ? 'border-[#468BFF] bg-[#468BFF]/5' 
-                  : 'border-gray-200 bg-white/80'
+                  ? 'border border-[#468BFF] bg-[#468BFF]/5' 
+                  : 'bg-white/80'
               } backdrop-blur-sm group`}
             >
               <div className="relative z-10 flex items-center justify-between">
