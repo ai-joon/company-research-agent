@@ -200,6 +200,11 @@ const LocationInput: React.FC<LocationInputProps> = ({ value, onChange, classNam
         type="text"
         value={value}
         onChange={handleInputChange}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+          }
+        }}
         className={`${className} !font-['DM_Sans']`}
         placeholder="City, Country"
       />
