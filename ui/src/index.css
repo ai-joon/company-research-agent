@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,700;1,400;1,500;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,7 +7,7 @@
 @layer base {
   body {
     @apply bg-gray-900;
-    font-family: "Noto Sans", sans-serif;
+    font-family: "DM Sans", sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     background-image: radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
@@ -16,7 +16,7 @@
   }
 
   h1 {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-size: 48px;
     font-style: normal;
     font-variation-settings: normal;
@@ -28,14 +28,26 @@
   }
 
   h2, h3, h4, h5, h6 {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-weight: 500;
     letter-spacing: -0.5px;
   }
 
   p, span, div, li, a {
-    font-family: "Noto Sans", sans-serif;
+    font-family: "DM Sans", sans-serif;
     font-weight: 400;
+  }
+
+  input {
+    font-family: "DM Sans", sans-serif;
+  }
+
+  button {
+    font-family: "DM Sans", sans-serif;
+  }
+
+  select {
+    font-family: "DM Sans", sans-serif;
   }
 }
 

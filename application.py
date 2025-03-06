@@ -12,21 +12,12 @@ import asyncio
 import uuid
 from collections import defaultdict
 from backend.services.mongodb import MongoDBService
-from contextlib import asynccontextmanager
 from backend.services.pdf_service import PDFService
-
-debug_mode = False
-if os.getenv("TAVILY_DEBUG", 'FALSE').upper() == "TRUE":
-    print("[ Running in DEBUG mode ]")
-    debug_mode = True
 
 import logging
 
 logger = logging.getLogger()
-if debug_mode:
-    logger.setLevel(logging.DEBUG)
-else:
-    logger.setLevel(logging.INFO)
+logger.setLevel(logging.INFO)
 console_handler = logging.StreamHandler()
 logger.addHandler(console_handler)
 
