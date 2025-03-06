@@ -258,35 +258,79 @@ class BaseResearcher:
 
     async def search_documents(self, state: ResearchState, queries: List[str]) -> Dict[str, Any]:
         """
-        Execute multiple Tavily searches in parallel using asyncio.gather
+        Execute all Tavily searches in parallel at maximum speed
         """
         websocket_manager = state.get('websocket_manager')
         job_id = state.get('job_id')
 
-        if websocket_manager and job_id:
-            await websocket_manager.send_status_update(
-                job_id=job_id,
-                status="processing",
-                message="Using Tavily search...",
-                result={"step": "Searching", "total_queries": len(queries)}
-            )
-        
         if not queries:
             logger.error("No valid queries to search")
             return {}
 
-        # Run all searches in parallel
+        # Send status update for generated queries
+        if websocket_manager and job_id:
+            await websocket_manager.send_status_update(
+                job_id=job_id,
+                status="queries_generated",
+                message=f"Generated {len(queries)} queries for {self.analyst_type}",
+                result={
+                    "step": "Searching",
+                    "analyst": self.analyst_type,
+                    "queries": queries,
+                    "total_queries": len(queries)
+                }
+            )
+
+        # Prepare all search parameters upfront
+        search_params = {
+            "search_depth": "basic",
+            "include_raw_content": False,
+            "max_results": 5
+        }
+        
+        if self.analyst_type == "news_analyst":
+            search_params["topic"] = "news"
+        elif self.analyst_type == "financial_analyst":
+            search_params["topic"] = "finance"
+
+        # Create all API calls upfront - direct Tavily client calls without the extra wrapper
         search_tasks = [
-            self.search_single_query(query, websocket_manager, job_id)
+            self.tavily_client.search(query, **search_params)
             for query in queries
         ]
-        search_results = await asyncio.gather(*search_tasks)
-        
-        # Merge all results
+
+        # Execute all API calls in parallel
+        try:
+            results = await asyncio.gather(*search_tasks)
+        except Exception as e:
+            logger.error(f"Error during parallel search execution: {e}")
+            return {}
+
+        # Process results
         merged_docs = {}
-        for docs in search_results:
-            merged_docs.update(docs)
-        
+        for query, result in zip(queries, results):
+            for item in result.get("results", []):
+                if not item.get("content") or not item.get("url"):
+                    continue
+                    
+                url = item.get("url")
+                title = item.get("title", "")
+                
+                if title:
+                    title = clean_title(title)
+                    if title.lower() == url.lower() or not title.strip():
+                        title = ""
+
+                merged_docs[url] = {
+                    "title": title,
+                    "content": item.get("content", ""),
+                    "query": query,
+                    "url": url,
+                    "source": "web_search",
+                    "score": item.get("score", 0.0)
+                }
+
+        # Send completion status
         if websocket_manager and job_id:
             await websocket_manager.send_status_update(
                 job_id=job_id,
@@ -298,5 +342,5 @@ class BaseResearcher:
                     "queries_processed": len(queries)
                 }
             )
-        
+
         return merged_docs
