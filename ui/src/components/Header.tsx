@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ glassStyle }) => {
           target="_blank"
           rel="noopener noreferrer"
           className={`text-gray-600 hover:text-gray-900 transition-colors ${glassStyle} rounded-lg flex items-center justify-center`}
-          style={{ width: '40px', height: '40px', padding: '8px' }}
+          style={{ width: '50px', height: '50px', padding: '2px' }}
           aria-label="Tavily Website"
         >
           <img 
@@ -36,8 +36,8 @@ const Header: React.FC<HeaderProps> = ({ glassStyle }) => {
             alt="Tavily Logo" 
             className="w-full h-full object-contain" 
             style={{ 
-              width: '24px', 
-              height: '24px',
+              width: '45px', 
+              height: '45px',
               display: 'block',
               margin: 'auto'
             }}
