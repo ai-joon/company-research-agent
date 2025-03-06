@@ -77,6 +77,8 @@ The platform uses a content filtering system in `curator.py`:
 
 The platform implements a WebSocket-based real-time communication system:
 
+![web ui](<static/ui-2.png>)
+
 1. **Backend Implementation**:
    - Uses FastAPI's WebSocket support
    - Maintains persistent connections per research job
