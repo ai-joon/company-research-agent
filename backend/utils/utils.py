@@ -37,10 +37,18 @@ def clean_text(text: str) -> str:
     text = text.replace('<para>', '').replace('</para>', '')
     return text.strip()
 
-def generate_pdf_from_md(markdown_content: str, output_pdf: str) -> None:
-    """Convert markdown content to PDF using a simplified ReportLab approach."""
+def generate_pdf_from_md(markdown_content: str, output_pdf) -> None:
+    """Convert markdown content to PDF using a simplified ReportLab approach.
+    
+    Args:
+        markdown_content (str): The markdown content to convert to PDF
+        output_pdf: Either a file path string or a BytesIO object
+    """
     try:
-        os.makedirs(os.path.dirname(os.path.abspath(output_pdf)), exist_ok=True)
+        # If output_pdf is a string (file path), ensure directory exists
+        if isinstance(output_pdf, str):
+            os.makedirs(os.path.dirname(os.path.abspath(output_pdf)), exist_ok=True)
+            
         markdown_content = markdown_content.replace('\r\n', '\n')  # Normalize Windows line endings
         markdown_content = markdown_content.replace('\\n', '\n')   # Convert literal \n to newlines
         

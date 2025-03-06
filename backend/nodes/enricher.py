@@ -131,7 +131,6 @@ class Enricher:
             )
 
         msg = [f"📚 Enriching curated data for {company}:"]
-        extraction_errors = []
 
         # Process each type of curated data
         data_types = {
@@ -185,48 +184,57 @@ class Enricher:
         # Process all categories in parallel
         if enrichment_tasks:
             async def process_category(task):
-                raw_contents = await self.fetch_raw_content(
-                    list(task['docs'].keys()),
-                    websocket_manager,
-                    job_id,
-                    task['category']
-                )
-                
-                enriched_count = 0
-                error_count = 0
-                
-                for url, content_or_error in raw_contents.items():
-                    if isinstance(content_or_error, dict) and content_or_error.get('error'):
-                        # This is an error result
-                        extraction_errors.append(f"{url}: {content_or_error['error']}")
-                        error_count += 1
-                    elif content_or_error:
-                        # This is a successful content
-                        task['curated_docs'][url]['raw_content'] = content_or_error
-                        enriched_count += 1
-
-                # Update state with enriched documents
-                state[task['field']] = task['curated_docs']
-                
-                if websocket_manager and job_id:
-                    await websocket_manager.send_status_update(
-                        job_id=job_id,
-                        status="category_complete",
-                        message=f"Completed {task['label']} documents",
-                        result={
-                            "step": "Enriching",
-                            "category": task['category'],
-                            "enriched": enriched_count,
-                            "total": len(task['docs'])
-                        }
+                try:
+                    raw_contents = await self.fetch_raw_content(
+                        list(task['docs'].keys()),
+                        websocket_manager,
+                        job_id,
+                        task['category']
                     )
-                
-                return {
-                    'category': task['category'],
-                    'enriched': enriched_count,
-                    'total': len(task['docs']),
-                    'errors': error_count
-                }
+                    
+                    enriched_count = 0
+                    error_count = 0
+                    
+                    for url, content_or_error in raw_contents.items():
+                        if isinstance(content_or_error, dict) and content_or_error.get('error'):
+                            # This is an error result - just skip it
+                            error_count += 1
+                        elif content_or_error:
+                            # This is a successful content
+                            task['curated_docs'][url]['raw_content'] = content_or_error
+                            enriched_count += 1
+
+                    # Update state with enriched documents
+                    state[task['field']] = task['curated_docs']
+                    
+                    if websocket_manager and job_id:
+                        await websocket_manager.send_status_update(
+                            job_id=job_id,
+                            status="category_complete",
+                            message=f"Completed {task['label']} documents",
+                            result={
+                                "step": "Enriching",
+                                "category": task['category'],
+                                "enriched": enriched_count,
+                                "total": len(task['docs'])
+                            }
+                        )
+                    
+                    return {
+                        'category': task['category'],
+                        'enriched': enriched_count,
+                        'total': len(task['docs']),
+                        'errors': error_count
+                    }
+                except Exception as e:
+                    # Log the error but don't fail the entire process
+                    print(f"Error processing category {task['category']}: {e}")
+                    return {
+                        'category': task['category'],
+                        'enriched': 0,
+                        'total': len(task['docs']),
+                        'errors': len(task['docs'])
+                    }
 
             # Process all categories in parallel
             results = await asyncio.gather(*[process_category(task) for task in enrichment_tasks])
@@ -236,11 +244,11 @@ class Enricher:
             total_documents = sum(r['total'] for r in results)
             total_errors = sum(r.get('errors', 0) for r in results)
 
-            # Send final status update with error information
+            # Send final status update
             if websocket_manager and job_id:
                 status_message = f"Content enrichment complete. Successfully enriched {total_enriched}/{total_documents} documents"
                 if total_errors > 0:
-                    status_message += f". Failed to extract {total_errors} documents."
+                    status_message += f". Skipped {total_errors} documents."
                 
                 await websocket_manager.send_status_update(
                     job_id=job_id,
@@ -258,12 +266,14 @@ class Enricher:
         messages = state.get('messages', [])
         messages.append(AIMessage(content="\n".join(msg)))
         state['messages'] = messages
-
-        # Check if there were any errors during enrichment
-        if extraction_errors:
-            state['error'] = f"Failed to extract content from {len(extraction_errors)} URLs: {', '.join(extraction_errors)}"
         
         return state
 
     async def run(self, state: ResearchState) -> ResearchState:
-        return await self.enrich_data(state) 
+        try:
+            return await self.enrich_data(state)
+        except Exception as e:
+            # Log the error but don't fail the research process
+            print(f"Error in enrichment process: {e}")
+            # Return the original state without any enrichment
+            return state 
