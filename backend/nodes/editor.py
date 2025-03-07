@@ -122,8 +122,8 @@ class Editor:
                         }
                     )
 
-            initial_report = await self.compile_content(state, briefings, company)
-            if not initial_report:
+            edited_report = await self.compile_content(state, briefings, company)
+            if not edited_report:
                 logger.error("Initial compilation failed")
                 return ""
 
@@ -140,11 +140,6 @@ class Editor:
                         }
                     )
 
-            edited_report = await self.content_sweep(state, initial_report, company)
-            if not edited_report:
-                logger.error("Content sweep failed")
-                return ""
-
             # Step 3: Formatting Final Report
             if websocket_manager := state.get('websocket_manager'):
                 if job_id := state.get('job_id'):
@@ -157,7 +152,7 @@ class Editor:
                             "substep": "format"
                         }
                     )
-            final_report = await self.clean_markdown(state, edited_report, company)
+            final_report = await self.content_sweep(state, edited_report, company)
             
             final_report = final_report or ""
             
@@ -295,45 +290,8 @@ Current report:
 2. Remove information that is not relevant to {company}, the {industry} company headquartered in {hq_location}.
 3. Remove sections lacking substantial content
 4. Remove any meta-commentary (e.g. "Here is the news...")
-5. Use bullet points (*) for lists
 
-Return the cleaned report in flawless markdown format. No explanations or commentary."""
-        
-        try:
-            response = await self.openai_client.chat.completions.create(
-                model="gpt-4o-mini",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert report editor that removes redundancy and improves clarity."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                temperature=0,
-                stream=False
-            )
-            return response.choices[0].message.content.strip()
-        except Exception as e:
-            logger.error(f"Error in editing: {e}")
-            return (content or "").strip()
-
-    async def clean_markdown(self, state: ResearchState, content: str, company: str) -> str:
-        """Clean up and format in markdown."""
-        # Use company from centralized context
-        company = self.context["company"]
-        
-        prompt = f"""You are an expert markdown editor. You are given a report on {company}.
-
-Current report:
-{content}
-
-Instructions:
 Strictly enforce this EXACT document structure:
-
-# {company} Research Report
 
 ## Company Overview
 [Company content with ### subsections]
@@ -367,11 +325,29 @@ Critical rules:
 9. Add one blank line before and after each section/list
 10. DO NOT CHANGE the format of the references section
 
-Return the polished report in flawless markdown format. No explanation."""
+Return the polished report in flawless markdown format. No explanation.
+
+Return the cleaned report in flawless markdown format. No explanations or commentary."""
         
         try:
             response = await self.openai_client.chat.completions.create(
                 model="gpt-4o-mini",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are an expert report editor that removes redundancy and improves clarity."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                temperature=0,
+                stream=True
+            )
+            
+            response = await self.openai_client.chat.completions.create(
+                model="gpt-4o-mini", 
                 messages=[
                     {
                         "role": "system",

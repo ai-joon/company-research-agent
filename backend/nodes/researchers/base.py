@@ -293,6 +293,16 @@ class BaseResearcher:
         elif self.analyst_type == "financial_analyst":
             search_params["topic"] = "finance"
 
+        if websocket_manager and job_id:
+            await websocket_manager.send_status_update(
+                job_id=job_id,
+                status="search_started",
+                message=f"Using Tavily to search for {len(queries)} queries",
+                result={
+                    "step": "Searching",
+                    "total_queries": len(queries)
+                }
+            )
         # Create all API calls upfront - direct Tavily client calls without the extra wrapper
         search_tasks = [
             self.tavily_client.search(query, **search_params)
