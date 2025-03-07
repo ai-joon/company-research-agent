@@ -47,26 +47,36 @@ const ResearchBriefings: React.FC<ResearchBriefingsProps> = ({
       </div>
 
       <div className={`overflow-hidden transition-all duration-500 ease-in-out ${
-        isExpanded ? 'mt-4 max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+        isExpanded ? 'mt-6 max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
       }`}>
-        <div className="grid grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 px-1">
           {['company', 'industry', 'financial', 'news'].map((category) => (
             <div 
               key={category} 
-              className={`${cardGlassStyle} rounded-lg p-3 transition-all duration-300 relative ${
+              className={`${cardGlassStyle} rounded-lg p-4 transition-all duration-500 ease-in-out relative ${
                 briefingStatus[category as keyof BriefingStatus] 
-                  ? 'border border-[#468BFF] bg-[#468BFF]/5' 
-                  : 'bg-white/80'
+                  ? 'border border-[#468BFF] bg-gradient-to-br from-[#468BFF]/5 to-[#468BFF]/10 shadow-md' 
+                  : 'border border-gray-200 bg-white/80 hover:border-gray-300 hover:shadow-sm'
               } backdrop-blur-sm group`}
             >
+              {/* Background decoration element (only visible when active) */}
+              <div 
+                className={`absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(70,139,255,0.15),transparent_70%)] opacity-0 transition-opacity duration-700 ease-in-out rounded-lg ${
+                  briefingStatus[category as keyof BriefingStatus] ? 'opacity-100' : ''
+                }`}
+                style={{ pointerEvents: 'none' }}
+              />
+              
               <div className="relative z-10 flex items-center justify-between">
-                <h3 className={`text-sm font-medium capitalize ${
+                <h3 className={`text-sm font-medium capitalize transition-all duration-500 ${
                   briefingStatus[category as keyof BriefingStatus]
                     ? 'text-[#468BFF]'
-                    : 'text-gray-700'
+                    : 'text-gray-700 group-hover:text-gray-900'
                 }`}>{category}</h3>
-                {briefingStatus[category as keyof BriefingStatus] && (
-                  <CheckCircle2 className="h-4 w-4 text-[#468BFF]" />
+                {briefingStatus[category as keyof BriefingStatus] ? (
+                  <CheckCircle2 className="h-4 w-4 text-[#468BFF] transition-all duration-300" />
+                ) : (
+                  <div className="h-4 w-4 rounded-full border border-gray-200 group-hover:border-gray-300 transition-all duration-300"></div>
                 )}
               </div>
             </div>

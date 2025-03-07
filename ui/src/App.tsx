@@ -1,12 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Building2,
-  Globe,
-  Factory,
-  Search,
-  Loader2,
-} from "lucide-react";
-import LocationInput from './components/LocationInput';
+import { useState, useEffect, useRef } from "react";
 import Header from './components/Header';
 import ResearchBriefings from './components/ResearchBriefings';
 import CurationExtraction from './components/CurationExtraction';

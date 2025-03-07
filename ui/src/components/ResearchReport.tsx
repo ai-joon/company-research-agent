@@ -64,7 +64,8 @@ const ResearchReport: React.FC<ResearchReportProps> = ({
                 </>
               ) : (
                 <>
-                  <Download className="h-5 w-5 mr-2" />
+                  <Download className="h-5 w-5" />
+                  <span className="ml-2">PDF</span>
                 </>
               )}
             </button>
