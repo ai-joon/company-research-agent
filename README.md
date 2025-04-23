@@ -11,7 +11,7 @@ A multi-agent tool that generates comprehensive company research reports. The pl
 - **Real-Time Progress Streaming**: Uses WebSocket connections to stream research progress and results
 - **Dual Model Architecture**: 
   - Gemini 2.0 Flash for high-context research synthesis
-  - GPT-4 Optimized for precise report formatting and editing
+  - GPT-4.1 Optimized for precise report formatting and editing
 - **Modern React Frontend**: Responsive UI with real-time updates, progress tracking, and download options
 - **Modular Architecture**: Built using a pipeline of specialized research and processing nodes
 
@@ -31,7 +31,7 @@ The platform follows an agentic framework with specialized nodes that process da
    - `Collector`: Aggregates research data from all analyzers
    - `Curator`: Implements content filtering and relevance scoring
    - `Briefing`: Generates category-specific summaries using Gemini 2.0 Flash
-   - `Editor`: Compiles and formats the briefings into a final report using GPT-4o-mini
+   - `Editor`: Compiles and formats the briefings into a final report using GPT-4.1-mini
 
    ![web ui](<static/agent-flow.png>)
 
@@ -45,7 +45,7 @@ The platform leverages separate models for optimal performance:
    - Used for generating initial category briefings
    - Efficient at maintaining context across multiple documents
 
-2. **GPT-4o-mini Optimized** (`editor.py`):
+2. **GPT-4.1-mini Optimized** (`editor.py`):
    - Specializes in precise formatting and editing tasks
    - Handles markdown structure and consistency
    - Superior at following exact formatting instructions
@@ -55,7 +55,7 @@ The platform leverages separate models for optimal performance:
      - Markdown formatting
      - Real-time report streaming
 
-This approach combines Gemini's strength in handling large context windows with GPT-4o-mini's precision in following specific formatting instructions.
+This approach combines Gemini's strength in handling large context windows with GPT-4.1-mini's precision in following specific formatting instructions.
 
 ### Content Curation System
 
