@@ -11,7 +11,7 @@ A multi-agent tool that generates comprehensive company research reports. The pl
 - **Real-Time Progress Streaming**: Uses WebSocket connections to stream research progress and results
 - **Dual Model Architecture**: 
   - Gemini 2.0 Flash for high-context research synthesis
-  - GPT-4.1 Optimized for precise report formatting and editing
+  - GPT-4.1 for precise report formatting and editing
 - **Modern React Frontend**: Responsive UI with real-time updates, progress tracking, and download options
 - **Modular Architecture**: Built using a pipeline of specialized research and processing nodes
 
@@ -45,7 +45,7 @@ The platform leverages separate models for optimal performance:
    - Used for generating initial category briefings
    - Efficient at maintaining context across multiple documents
 
-2. **GPT-4.1-mini Optimized** (`editor.py`):
+2. **GPT-4.1 mini** (`editor.py`):
    - Specializes in precise formatting and editing tasks
    - Handles markdown structure and consistency
    - Superior at following exact formatting instructions
