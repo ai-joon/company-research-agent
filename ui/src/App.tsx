@@ -792,7 +792,7 @@ function App() {
   // Add these to your existing styles
   const fadeInAnimation: AnimationStyle = {
     fadeIn: "transition-all duration-300 ease-in-out",
-    writing: writingAnimation,
+    writing: "animate-pulse",
     colorTransition: colorAnimation
   };
 
