@@ -1,3 +1,6 @@
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.md)
+[![zh](https://img.shields.io/badge/lang-pt--br-green.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.zh.md)
+
 # Agentic Company Researcher 🔍
 
 ![web ui](<static/ui-1.png>)

@@ -1,3 +1,6 @@
+[![zh](https://img.shields.io/badge/lang-pt--br-green.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.zh.md)
+[![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.md)
+
 # 智能公司研究助手 🔍
 
 ![web ui](<static/ui-1.png>)
