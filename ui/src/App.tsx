@@ -6,17 +6,9 @@ import ResearchQueries from './components/ResearchQueries';
 import ResearchStatus from './components/ResearchStatus';
 import ResearchReport from './components/ResearchReport';
 import ResearchForm from './components/ResearchForm';
-import {
-  ResearchStatus as ResearchStatusType,
-  ResearchOutput,
-  DocCount,
-  DocCounts,
-  EnrichmentCounts,
-  ResearchState,
-  GlassStyle,
-  AnimationStyle
-} from './types';
+import {ResearchOutput, DocCount,DocCounts, EnrichmentCounts, ResearchState, ResearchStatusType} from './types';
 import { checkForFinalReport } from './utils/handlers';
+import { colorAnimation, dmSansStyle, glassStyle, fadeInAnimation } from './styles';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const WS_URL = import.meta.env.VITE_WS_URL;
@@ -27,59 +19,14 @@ if (!API_URL || !WS_URL) {
   );
 }
 
-// Add this near your other styles at the top of the file
-const colorAnimation = `
-@keyframes colorTransition {
-  0% { stroke: #468BFF; }
-  15% { stroke: #8FBCFA; }
-  30% { stroke: #468BFF; }
-  45% { stroke: #FE363B; }
-  60% { stroke: #FF9A9D; }
-  75% { stroke: #FDBB11; }
-  90% { stroke: #F6D785; }
-  100% { stroke: #468BFF; }
-}
-
-.animate-colors {
-  animation: colorTransition 8s ease-in-out infinite;
-  animation-fill-mode: forwards;
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Add transition for smoother color changes */
-.loader-icon {
-  transition: stroke 1s ease-in-out;
-}
-`;
-
-// Add this right after the writingAnimation style
+// Add styles to document head
 const colorStyle = document.createElement('style');
 colorStyle.textContent = colorAnimation;
 document.head.appendChild(colorStyle);
 
-// Add DM Sans font import
-const dmSansStyle = document.createElement('style');
-dmSansStyle.textContent = `
-  @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap');
-  
-  /* Apply DM Sans globally */
-  body {
-    font-family: 'DM Sans', sans-serif;
-  }
-`;
-document.head.appendChild(dmSansStyle);
+const dmSansStyleElement = document.createElement('style');
+dmSansStyleElement.textContent = dmSansStyle;
+document.head.appendChild(dmSansStyleElement);
 
 function App() {
 
@@ -791,20 +738,6 @@ function App() {
   // Add BriefingProgress component
 
   // Add EnrichmentProgress component
-
-  // Add these styles at the top of the component, before the return statement
-  const glassStyle: GlassStyle = {
-    base: "backdrop-filter backdrop-blur-lg bg-white/80 border border-gray-200 shadow-xl",
-    card: "backdrop-filter backdrop-blur-lg bg-white/80 border border-gray-200 shadow-xl rounded-2xl p-6",
-    input: "backdrop-filter backdrop-blur-lg bg-white/80 border border-gray-200 shadow-xl pl-10 w-full rounded-lg py-3 px-4 text-gray-900 focus:border-[#468BFF]/50 focus:outline-none focus:ring-1 focus:ring-[#468BFF]/50 placeholder-gray-400 bg-white/80 shadow-none"
-  };
-
-  // Add these to your existing styles
-  const fadeInAnimation: AnimationStyle = {
-    fadeIn: "transition-all duration-300 ease-in-out",
-    writing: "animate-pulse",
-    colorTransition: colorAnimation
-  };
 
   // Function to render progress components in order
   const renderProgressComponents = () => {
