@@ -6,14 +6,8 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib import colors
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, ListFlowable, ListItem
+from .references import extract_domain_name
 
-
-def extract_domain_name(url: str) -> str:
-    """Extract domain name from URL."""
-    match = re.search(r'https?://([^/]+)', url)
-    if match:
-        return match.group(1)
-    return url
 
 def extract_title_from_url_path(url: str) -> str:
     """Extract a title from a URL path."""

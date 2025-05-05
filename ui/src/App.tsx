@@ -16,6 +16,7 @@ import {
   GlassStyle,
   AnimationStyle
 } from './types';
+import { checkForFinalReport } from './utils/handlers';
 
 const API_URL = import.meta.env.VITE_API_URL;
 const WS_URL = import.meta.env.VITE_WS_URL;
@@ -232,7 +233,16 @@ function App() {
       if (isResearching && !hasFinalReport) {
         // Start polling for final report
         if (!pollingIntervalRef.current) {
-          pollingIntervalRef.current = setInterval(() => checkForFinalReport(jobId), 5000);
+          pollingIntervalRef.current = setInterval(() => checkForFinalReport(
+            jobId,
+            setOutput,
+            setStatus,
+            setIsComplete,
+            setIsResearching,
+            setCurrentPhase,
+            setHasFinalReport,
+            pollingIntervalRef
+          ), 5000);
         }
 
         // Attempt reconnection if we haven't exceeded max attempts
@@ -865,41 +875,6 @@ function App() {
     }
 
     return components;
-  };
-
-  // Add function to check for final report
-  const checkForFinalReport = async (jobId: string) => {
-    try {
-      const response = await fetch(`${API_URL}/research/status/${jobId}`);
-      if (!response.ok) throw new Error('Failed to fetch status');
-      
-      const data = await response.json();
-      
-      if (data.status === "completed" && data.result?.report) {
-        setOutput({
-          summary: "",
-          details: {
-            report: data.result.report,
-          },
-        });
-        setStatus({
-          step: "Complete",
-          message: "Research completed successfully"
-        });
-        setIsComplete(true);
-        setIsResearching(false);
-        setCurrentPhase('complete');
-        setHasFinalReport(true);
-        
-        // Clear polling interval
-        if (pollingIntervalRef.current) {
-          clearInterval(pollingIntervalRef.current);
-          pollingIntervalRef.current = null;
-        }
-      }
-    } catch (error) {
-      console.error('Error checking final report:', error);
-    }
   };
 
   // Add cleanup for polling interval

@@ -331,22 +331,6 @@ Return the cleaned report in flawless markdown format. No explanations or commen
         
         try:
             response = await self.openai_client.chat.completions.create(
-                model="gpt-4.1-mini",
-                messages=[
-                    {
-                        "role": "system",
-                        "content": "You are an expert report editor that removes redundancy and improves clarity."
-                    },
-                    {
-                        "role": "user",
-                        "content": prompt
-                    }
-                ],
-                temperature=0,
-                stream=True
-            )
-            
-            response = await self.openai_client.chat.completions.create(
                 model="gpt-4.1-mini", 
                 messages=[
                     {
