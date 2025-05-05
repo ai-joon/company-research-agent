@@ -1,5 +1,5 @@
 import { API_URL } from './constants';
-import { ResearchOutput, ResearchState, ResearchStatus } from '../types';
+import { ResearchOutput, ResearchState, ResearchStatusType } from '../types';
 
 export const handleGeneratePdf = async (
   output: ResearchOutput | null,
@@ -75,7 +75,7 @@ export const handleCopyToClipboard = async (
 export const checkForFinalReport = async (
   jobId: string,
   setOutput: (output: ResearchOutput | null) => void,
-  setStatus: (status: ResearchStatus | null) => void,
+  setStatus: (status: ResearchStatusType | null) => void,
   setIsComplete: (value: boolean) => void,
   setIsResearching: (value: boolean) => void,
   setCurrentPhase: (phase: 'search' | 'enrichment' | 'briefing' | 'complete' | null) => void,
@@ -116,7 +116,7 @@ export const checkForFinalReport = async (
 };
 
 export const resetResearch = (
-  setStatus: (status: ResearchStatus | null) => void,
+  setStatus: (status: ResearchStatusType | null) => void,
   setOutput: (output: ResearchOutput | null) => void,
   setError: (error: string | null) => void,
   setIsComplete: (value: boolean) => void,

@@ -62,4 +62,15 @@ export type AnimationStyle = {
   fadeIn: string;
   writing: string;
   colorTransition: string;
+};
+
+export type ResearchStatusProps = {
+  status: ResearchStatusType | null;
+  error: string | null;
+  isComplete: boolean;
+  currentPhase: 'search' | 'enrichment' | 'briefing' | 'complete' | null;
+  isResetting: boolean;
+  glassStyle: GlassStyle;
+  loaderColor: string;
+  statusRef: React.RefObject<HTMLDivElement>;
 }; 
