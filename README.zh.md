@@ -7,6 +7,8 @@
 
 一个多智能体工具，用于生成全面的公司研究报告。该平台使用一系列AI智能体来收集、整理和综合任何公司的信息。
 
+✨快来看看吧！[https://companyresearcher.tavily.com](https://companyresearcher.tavily.com) ✨
+
 ## 功能特点
 
 - **多源研究**：从公司网站、新闻文章、财务报告和行业分析等多个来源收集数据
