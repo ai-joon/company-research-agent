@@ -7,6 +7,8 @@
 
 A multi-agent tool that generates comprehensive company research reports. The platform uses a pipeline of AI agents to gather, curate, and synthesize information about any company.
 
+✨Check it out online! https://companyresearcher.tavily.com ✨
+
 ## Features
 
 - **Multi-Source Research**: Gathers data from various sources including company websites, news articles, financial reports, and industry analyses
