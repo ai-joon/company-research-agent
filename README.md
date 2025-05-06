@@ -9,6 +9,7 @@ A multi-agent tool that generates comprehensive company research reports. The pl
 
 ✨Check it out online! https://companyresearcher.tavily.com ✨
 
+https://github.com/user-attachments/assets/0e373146-26a7-4391-b973-224ded3182a9
 
 ## Features
 
