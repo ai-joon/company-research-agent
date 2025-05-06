@@ -9,6 +9,8 @@
 
 ✨快来看看吧！[https://companyresearcher.tavily.com](https://companyresearcher.tavily.com) ✨
 
+![demo](<static/demo.gif>)
+
 ## 功能特点
 
 - **多源研究**：从公司网站、新闻文章、财务报告和行业分析等多个来源收集数据

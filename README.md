@@ -9,6 +9,8 @@ A multi-agent tool that generates comprehensive company research reports. The pl
 
 ✨Check it out online! https://companyresearcher.tavily.com ✨
 
+![demo](<static/demo.gif>)
+
 ## Features
 
 - **Multi-Source Research**: Gathers data from various sources including company websites, news articles, financial reports, and industry analyses
