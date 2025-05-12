@@ -83,6 +83,11 @@ fi
 echo -e "\n${BLUE}Installing Node.js dependencies...${NC}"
 cd ui
 npm install
+# Create or overwrite .env.development for frontend dev environment
+cat > .env.development << EOL
+VITE_API_URL=http://localhost:8000
+VITE_WS_URL=ws://localhost:8000
+EOL
 cd ..
 echo -e "${GREEN}✓ Node.js dependencies installed${NC}"
 
