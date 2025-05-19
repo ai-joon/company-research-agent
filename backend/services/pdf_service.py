@@ -1,10 +1,12 @@
+import io
 import logging
 import os
 import re
+
 from fastapi import HTTPException
-from backend.utils.utils import generate_pdf_from_md
 from fastapi.responses import StreamingResponse
-import io
+
+from backend.utils.utils import generate_pdf_from_md
 
 logger = logging.getLogger(__name__)
 

@@ -1,26 +1,29 @@
+import asyncio
+import logging
 import os
+import uuid
+from collections import defaultdict
+from datetime import datetime
 from pathlib import Path
+
+import uvicorn
 from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from pydantic import BaseModel
+
+from backend.graph import Graph
+from backend.services.mongodb import MongoDBService
+from backend.services.pdf_service import PDFService
+from backend.services.websocket_manager import WebSocketManager
 
 # Load environment variables from .env file at startup
 env_path = Path(__file__).parent / '.env'
 if env_path.exists():
     load_dotenv(dotenv_path=env_path, override=True)
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
-from pydantic import BaseModel
-from backend.graph import Graph
-from backend.services.websocket_manager import WebSocketManager
-import logging
-import uvicorn
-from datetime import datetime
-import asyncio
-import uuid
-from collections import defaultdict
-from backend.services.mongodb import MongoDBService
-from backend.services.pdf_service import PDFService
+
 
 # Configure logging
 logger = logging.getLogger()
@@ -234,7 +237,7 @@ async def get_research_report(job_id: str):
     return report
 
 @app.post("/research/{job_id}/generate-pdf")
-async def generate_pdf(job_id: str):
+async def generate_pdf_from_job(job_id: str):
     return pdf_service.generate_pdf_from_job(job_id, job_status, mongodb)
 
 @app.post("/generate-pdf")
