@@ -14,8 +14,6 @@ from reportlab.platypus import (
     Spacer,
 )
 
-from .references import extract_domain_name
-
 
 def extract_title_from_url_path(url: str) -> str:
     """Extract a title from a URL path."""
@@ -247,7 +245,6 @@ def convert_markdown_to_pdf_elements(markdown_text: str, custom_styles: Dict) ->
     story = []
     current_list_items = []
     in_list = False
-    in_references = False
 
     lines = markdown_text.split('\n')
     i = 0
@@ -328,11 +325,6 @@ def convert_markdown_to_pdf_elements(markdown_text: str, custom_styles: Dict) ->
             style_name = f'Heading{heading_level}'
             # Use an existing style or a custom style
             story.append(Paragraph(heading_text, custom_styles.get(style_name, custom_styles['BodyText'])))
-
-            if heading_text.lower() == 'references':
-                in_references = True
-            else:
-                in_references = False
             i += 1
             continue
 

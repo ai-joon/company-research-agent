@@ -1,13 +1,17 @@
-from langchain_core.messages import AIMessage
-from typing import Dict, Any
-from openai import AsyncOpenAI
-import os
 import logging
+import os
+from typing import Any, Dict
 
-logger = logging.getLogger(__name__)
+from langchain_core.messages import AIMessage
+from openai import AsyncOpenAI
 
 from ..classes import ResearchState
 from ..utils.references import format_references_section
+
+logger = logging.getLogger(__name__)
+
+
+
 
 class Editor:
     """Compiles individual section briefings into a cohesive final report."""

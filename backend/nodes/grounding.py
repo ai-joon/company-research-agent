@@ -1,7 +1,9 @@
+import logging
+import os
+
 from langchain_core.messages import AIMessage
 from tavily import AsyncTavilyClient
-import os
-import logging
+
 from ..classes import InputState, ResearchState
 
 logger = logging.getLogger(__name__)
@@ -63,7 +65,7 @@ class GroundingNode:
                         'raw_content': "\n\n".join(raw_contents)
                     }
                     logger.info(f"Successfully extracted {len(raw_contents)} content sections")
-                    msg += f"\n✅ Successfully extracted content from website"
+                    msg += "\n✅ Successfully extracted content from website"
                     if websocket_manager := state.get('websocket_manager'):
                         if job_id := state.get('job_id'):
                             await websocket_manager.send_status_update(
@@ -74,7 +76,7 @@ class GroundingNode:
                             )
                 else:
                     logger.warning("No content found in extraction results")
-                    msg += f"\n⚠️ No content found in website extraction"
+                    msg += "\n⚠️ No content found in website extraction"
                     if websocket_manager := state.get('websocket_manager'):
                         if job_id := state.get('job_id'):
                             await websocket_manager.send_status_update(

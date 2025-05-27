@@ -1,7 +1,9 @@
-from pymongo import MongoClient
 from datetime import datetime
-from typing import Dict, Any, Optional
+from typing import Any, Dict, Optional
+
 import certifi
+from pymongo import MongoClient
+
 
 class MongoDBService:
     def __init__(self, uri: str):

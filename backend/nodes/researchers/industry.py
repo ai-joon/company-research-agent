@@ -1,7 +1,10 @@
+from typing import Any, Dict
+
 from langchain_core.messages import AIMessage
-from typing import Dict, Any
+
 from ...classes import ResearchState
 from .base import BaseResearcher
+
 
 class IndustryAnalyzer(BaseResearcher):
     def __init__(self) -> None:
@@ -33,7 +36,7 @@ class IndustryAnalyzer(BaseResearcher):
                 await websocket_manager.send_status_update(
                     job_id=job_id,
                     status="processing",
-                    message=f"Industry analysis queries generated",
+                    message="Industry analysis queries generated",
                     result={
                         "step": "Industry Analyst",
                         "analyst_type": "Industry Analyst",

@@ -1,9 +1,12 @@
-from langchain_core.messages import AIMessage
-from typing import Dict, List
-import os
-from tavily import AsyncTavilyClient
 import asyncio
+import os
+from typing import Dict, List
+
+from langchain_core.messages import AIMessage
+from tavily import AsyncTavilyClient
+
 from ..classes import ResearchState
+
 
 class Enricher:
     """Enriches curated documents with raw content."""

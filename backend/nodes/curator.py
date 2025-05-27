@@ -1,8 +1,10 @@
-from langchain_core.messages import AIMessage
-from typing import Dict
-from ..classes import ResearchState
-from urllib.parse import urlparse, urljoin
 import logging
+from typing import Dict
+from urllib.parse import urljoin, urlparse
+
+from langchain_core.messages import AIMessage
+
+from ..classes import ResearchState
 from ..utils.references import process_references_from_search_results
 
 logger = logging.getLogger(__name__)
@@ -20,7 +22,7 @@ class Curator:
                 await websocket_manager.send_status_update(
                     job_id=job_id,
                     status="processing",
-                    message=f"Evaluating documents",
+                    message="Evaluating documents",
                     result={
                         "step": "Curation",
                     }
@@ -141,7 +143,7 @@ class Curator:
                         doc['url'] = clean_url
                         doc['doc_type'] = doc_type
                         unique_docs[clean_url] = doc
-                except Exception as e:
+                except Exception:
                     continue
 
             docs = list(unique_docs.values())
@@ -169,7 +171,7 @@ class Curator:
             evaluated_docs = await self.evaluate_documents(state, docs, context)
 
             if not evaluated_docs:
-                msg.append(f"  ⚠️ No relevant documents found")
+                msg.append("  ⚠️ No relevant documents found")
                 doc_counts[data_field] = {"initial": len(docs), "kept": 0}
                 continue
 
@@ -191,7 +193,7 @@ class Curator:
                 msg.append(f"  ✓ Kept {len(relevant_docs)} relevant documents")
                 logger.info(f"Kept {len(relevant_docs)} documents for {doc_type} with scores above threshold")
             else:
-                msg.append(f"  ⚠️ No documents met relevance threshold")
+                msg.append("  ⚠️ No documents met relevance threshold")
                 logger.info(f"No documents met relevance threshold for {doc_type}")
 
             # Store curated documents in state

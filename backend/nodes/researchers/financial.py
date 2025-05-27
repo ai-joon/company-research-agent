@@ -1,6 +1,8 @@
-from langchain_core.messages import AIMessage
-from typing import Dict, Any
 import logging
+from typing import Any, Dict
+
+from langchain_core.messages import AIMessage
+
 from ...classes import ResearchState
 from .base import BaseResearcher
 
@@ -39,7 +41,7 @@ class FinancialAnalyst(BaseResearcher):
                     await websocket_manager.send_status_update(
                         job_id=job_id,
                         status="processing",
-                        message=f"Financial analysis queries generated",
+                        message="Financial analysis queries generated",
                         result={
                             "step": "Financial Analyst",
                             "analyst_type": "Financial Analyst",

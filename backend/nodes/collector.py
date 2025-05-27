@@ -1,5 +1,7 @@
 from langchain_core.messages import AIMessage
+
 from ..classes import ResearchState
+
 
 class Collector:
     """Collects and organizes all research data before curation."""

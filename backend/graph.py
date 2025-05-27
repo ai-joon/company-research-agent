@@ -1,17 +1,22 @@
+import logging
+from typing import Any, AsyncIterator, Dict
+
 from langchain_core.messages import SystemMessage
 from langgraph.graph import StateGraph
-from typing import Dict, Any, AsyncIterator
-import logging
 
 from .classes.state import InputState
 from .nodes import GroundingNode
-from .nodes.researchers import (FinancialAnalyst, NewsScanner, 
-                               IndustryAnalyzer, CompanyAnalyzer)
+from .nodes.briefing import Briefing
 from .nodes.collector import Collector
 from .nodes.curator import Curator
-from .nodes.enricher import Enricher
-from .nodes.briefing import Briefing
 from .nodes.editor import Editor
+from .nodes.enricher import Enricher
+from .nodes.researchers import (
+    CompanyAnalyzer,
+    FinancialAnalyst,
+    IndustryAnalyzer,
+    NewsScanner,
+)
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,10 @@
+from typing import Any, Dict
+
 from langchain_core.messages import AIMessage
-from typing import Dict, Any
+
 from ...classes import ResearchState
 from .base import BaseResearcher
+
 
 class NewsScanner(BaseResearcher):
     def __init__(self) -> None:
