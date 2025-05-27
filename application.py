@@ -23,8 +23,6 @@ env_path = Path(__file__).parent / '.env'
 if env_path.exists():
     load_dotenv(dotenv_path=env_path, override=True)
 
-
-
 # Configure logging
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -69,10 +67,6 @@ class ResearchRequest(BaseModel):
     hq_location: str | None = None
 
 class PDFGenerationRequest(BaseModel):
-    report_content: str
-    company_name: str | None = None
-
-class GeneratePDFRequest(BaseModel):
     report_content: str
     company_name: str | None = None
 
@@ -236,12 +230,8 @@ async def get_research_report(job_id: str):
         raise HTTPException(status_code=404, detail="Research report not found")
     return report
 
-@app.post("/research/{job_id}/generate-pdf")
-async def generate_pdf_from_job(job_id: str):
-    return pdf_service.generate_pdf_from_job(job_id, job_status, mongodb)
-
 @app.post("/generate-pdf")
-async def generate_pdf(data: GeneratePDFRequest):
+async def generate_pdf(data: PDFGenerationRequest):
     """Generate a PDF from markdown content and stream it to the client."""
     try:
         success, result = pdf_service.generate_pdf_stream(data.report_content, data.company_name)

@@ -3,9 +3,6 @@ import logging
 import os
 import re
 
-from fastapi import HTTPException
-from fastapi.responses import StreamingResponse
-
 from backend.utils.utils import generate_pdf_from_md
 
 logger = logging.getLogger(__name__)
@@ -66,56 +63,3 @@ class PDFService:
             error_msg = f"Error generating PDF: {str(e)}"
             logger.error(error_msg)
             return False, error_msg
-
-    def generate_pdf_from_job(self, job_id: str, job_status: dict, mongodb=None) -> dict:
-        """Generate a PDF from a job's report content."""
-        try:
-            # First try to get report from memory
-            report_content = None
-            if job_id in job_status:
-                result = job_status[job_id]
-                if isinstance(result, dict):
-                    report_content = result.get('report')
-
-            # If not in memory and MongoDB is available, try to get from MongoDB
-            if not report_content and mongodb:
-                try:
-                    report = mongodb.get_report(job_id)
-                    if report and isinstance(report, dict):
-                        report_content = report.get('report')
-                except Exception as e:
-                    logger.warning(f"Failed to get report from MongoDB: {e}")
-
-            if not report_content:
-                raise HTTPException(status_code=404, detail="No report content available")
-
-            # Get company name from memory or MongoDB
-            company_name = None
-            if job_id in job_status:
-                company_name = job_status[job_id].get('company')
-            if not company_name and mongodb:
-                try:
-                    job = mongodb.get_job(job_id)
-                    if job and isinstance(job, dict):
-                        company_name = job.get('company')
-                except Exception as e:
-                    logger.warning(f"Failed to get company name from MongoDB: {e}")
-
-            success, result = self.generate_pdf_stream(report_content, company_name)
-            if success:
-                pdf_buffer, filename = result
-                return StreamingResponse(
-                    pdf_buffer,
-                    media_type='application/pdf',
-                    headers={
-                        'Content-Disposition': f'attachment; filename="{filename}"'
-                    }
-                )
-            else:
-                raise HTTPException(status_code=500, detail=result)
-
-        except HTTPException:
-            raise
-        except Exception as e:
-            logger.error(f"PDF generation failed: {e}")
-            raise HTTPException(status_code=500, detail=str(e)) 
