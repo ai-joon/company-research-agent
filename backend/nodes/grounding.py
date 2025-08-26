@@ -51,8 +51,14 @@ class GroundingNode:
                     )
 
             try:
-                logger.info("Initiating Tavily extraction")
-                site_extraction = await self.tavily_client.extract(url, extract_depth="basic")
+                logger.info("Initiating Tavily crawl")
+                site_extraction = await self.tavily_client.crawl(
+                    url=url, 
+                    instructions="Company information",
+                    max_depth=1, 
+                    max_breadth=50, 
+                    extract_depth="advanced"
+                )
                 
                 raw_contents = []
                 for item in site_extraction.get("results", []):
@@ -64,19 +70,19 @@ class GroundingNode:
                         'title': company,
                         'raw_content': "\n\n".join(raw_contents)
                     }
-                    logger.info(f"Successfully extracted {len(raw_contents)} content sections")
-                    msg += "\n✅ Successfully extracted content from website"
+                    logger.info(f"Successfully crawled {len(raw_contents)} content sections")
+                    msg += "\n✅ Successfully crawled content from website"
                     if websocket_manager := state.get('websocket_manager'):
                         if job_id := state.get('job_id'):
                             await websocket_manager.send_status_update(
                                 job_id=job_id,
                                 status="processing",
-                                message="Successfully extracted content from website",
+                                message="Successfully crawled and extracted content from website",
                                 result={"step": "Initial Site Scrape"}
                             )
                 else:
-                    logger.warning("No content found in extraction results")
-                    msg += "\n⚠️ No content found in website extraction"
+                    logger.warning("No content found in crawl results")
+                    msg += "\n⚠️ No content found in website crawl"
                     if websocket_manager := state.get('websocket_manager'):
                         if job_id := state.get('job_id'):
                             await websocket_manager.send_status_update(
@@ -87,8 +93,8 @@ class GroundingNode:
                             )
             except Exception as e:
                 error_str = str(e)
-                logger.error(f"Website extraction error: {error_str}", exc_info=True)
-                error_msg = f"⚠️ Error extracting website content: {error_str}"
+                logger.error(f"Website crawl error: {error_str}", exc_info=True)
+                error_msg = f"⚠️ Error crawling website content: {error_str}"
                 print(error_msg)
                 msg += f"\n{error_msg}"
                 if websocket_manager := state.get('websocket_manager'):
@@ -137,8 +143,8 @@ class GroundingNode:
             "job_id": state.get('job_id')
         }
 
-        # If there was an error in the initial extraction, store it in the state
-        if "⚠️ Error extracting website content:" in msg:
+        # If there was an error in the initial crawl, store it in the state
+        if "⚠️ Error crawling website content:" in msg:
             research_state["error"] = error_str
 
         return research_state
