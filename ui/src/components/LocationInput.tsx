@@ -14,97 +14,6 @@ declare global {
   }
 }
 
-// Global state to track script loading
-let isScriptLoaded = false;
-let isScriptLoading = false;
-let scriptLoadPromise: Promise<void> | null = null;
-
-const loadGoogleMapsScript = (): Promise<void> => {
-  // If already loaded, return resolved promise
-  if (isScriptLoaded && window.google?.maps?.places) {
-    return Promise.resolve();
-  }
-
-  // If already loading, return existing promise
-  if (isScriptLoading && scriptLoadPromise) {
-    return scriptLoadPromise;
-  }
-
-  // Check if script is already in the document
-  const existingScript = document.querySelector('script[src*="maps.googleapis.com/maps/api/js"]');
-  if (existingScript && window.google?.maps?.places) {
-    isScriptLoaded = true;
-    return Promise.resolve();
-  }
-
-  isScriptLoading = true;
-  scriptLoadPromise = new Promise<void>((resolve, reject) => {
-  // If API is already available, resolve immediately
-    if (window.google?.maps?.places) {
-      isScriptLoaded = true;
-      isScriptLoading = false;
-      resolve();
-      return;
-    }
-
-    // Define the callback function
-    window.initGoogleMapsCallback = () => {
-      isScriptLoaded = true;
-      isScriptLoading = false;
-      resolve();
-    };
-
-    // Create script element only if it doesn't exist
-    if (!existingScript) {
-      const script = document.createElement('script');
-      const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
-
-      if (!apiKey) {
-        console.error('Google Maps API key is not defined. Please set VITE_GOOGLE_MAPS_API_KEY in your environment variables.');
-        isScriptLoading = false;
-        reject(new Error('Google Maps API key is not defined'));
-        return;
-      }
-
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&loading=async&callback=initGoogleMapsCallback`;
-      script.async = true;
-      script.defer = true;
-
-      // Handle errors
-      script.onerror = (error) => {
-        console.error('Error loading Google Maps script:', error);
-        isScriptLoading = false;
-        scriptLoadPromise = null;
-        reject(error);
-      };
-
-      // Append to document
-      document.head.appendChild(script);
-    } else {
-      // Script exists but API might not be ready yet
-      const checkInterval = setInterval(() => {
-        if (window.google?.maps?.places) {
-          isScriptLoaded = true;
-          isScriptLoading = false;
-          clearInterval(checkInterval);
-          resolve();
-        }
-      }, 100);
-
-      // Clear interval after 10 seconds to prevent infinite checking
-      setTimeout(() => {
-        clearInterval(checkInterval);
-        if (!isScriptLoaded) {
-          isScriptLoading = false;
-          reject(new Error('Google Maps API failed to load within timeout'));
-        }
-      }, 10000);
-    }
-  });
-
-  return scriptLoadPromise;
-};
-
 const LocationInput: React.FC<LocationInputProps> = ({ value, onChange, className }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const autocompleteElementRef = useRef<any>(null);
@@ -125,6 +34,10 @@ const LocationInput: React.FC<LocationInputProps> = ({ value, onChange, classNam
         setIsApiLoaded(true);
       } catch (error) {
         console.error('Failed to load Google Maps API:', error);
+        // Ensure input is visible when Google Maps fails to load
+        if (inputRef.current) {
+          inputRef.current.style.display = '';
+        }
       }
     };
 
