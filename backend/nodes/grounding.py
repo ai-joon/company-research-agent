@@ -54,7 +54,7 @@ class GroundingNode:
                 logger.info("Initiating Tavily crawl")
                 site_extraction = await self.tavily_client.crawl(
                     url=url, 
-                    instructions="Company information",
+                    instructions="Find any pages that will help us understand the company's business, products, services, and any other relevant information.",
                     max_depth=1, 
                     max_breadth=50, 
                     extract_depth="advanced"
