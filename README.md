@@ -1,6 +1,6 @@
 
 
-# Agentic Company Researcher 🔍
+# Company Research Agent
 
 ![web ui](<static/ui-1.png>)
 
