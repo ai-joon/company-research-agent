@@ -1,25 +1,15 @@
- [![en](https://img.shields.io/badge/lang-en-red.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.md)
-[![zh](https://img.shields.io/badge/lang-zh-green.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.zh.md)
-[![fr](https://img.shields.io/badge/lang-fr-blue.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.fr.md)
-[![es](https://img.shields.io/badge/lang-es-yellow.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.es.md)
-[![jp](https://img.shields.io/badge/lang-jp-orange.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.jp.md)
-[![kr](https://img.shields.io/badge/lang-ko-purple.svg)](https://github.com/pogjester/company-research-agent/blob/main/README.kr.md)
 
 
-# Agentic Company Researcher 🔍
+# Company Research Agent
 
 ![web ui](<static/ui-1.png>)
 
 A multi-agent tool that generates comprehensive company research reports. The platform uses a pipeline of AI agents to gather, curate, and synthesize information about any company.
 
-✨Check it out online! https://companyresearcher.tavily.com ✨
-
-https://github.com/user-attachments/assets/0e373146-26a7-4391-b973-224ded3182a9
-
 ## Features
 
 - **Multi-Source Research**: Gathers data from various sources including company websites, news articles, financial reports, and industry analyses
-- **AI-Powered Content Filtering**: Uses Tavily's relevance scoring for content curation
+- **AI-Powered Content Filtering**: Uses relevance scoring for content curation
 - **Real-Time Progress Streaming**: Uses WebSocket connections to stream research progress and results
 - **Dual Model Architecture**:
   - Gemini 2.0 Flash for high-context research synthesis
@@ -74,7 +64,7 @@ This approach combines Gemini's strength in handling large context windows with 
 The platform uses a content filtering system in `curator.py`:
 
 1. **Relevance Scoring**:
-   - Documents are scored by Tavily's AI-powered search
+   - Documents are scored by AI-powered search
    - A minimum threshold (default 0.4) is required to proceed
    - Scores reflect relevance to the specific research query
    - Higher scores indicate better matches to the research intent
@@ -132,8 +122,8 @@ The easiest way to get started is using the setup script, which automatically de
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/pogjester/tavily-company-research.git
-cd tavily-company-research
+git clone https://github.com/ai-joon/company-research-agent.git
+cd company-research-agent
 ```
 
 2. Make the setup script executable and run it:
@@ -151,14 +141,8 @@ The setup script will:
 - Guide you through setting up your environment variables
 - Optionally start both backend and frontend servers
 
-> **💡 Pro Tip**: Install [uv](https://github.com/astral-sh/uv) for significantly faster Python package installation:
->
-> ```bash
-> curl -LsSf https://astral.sh/uv/install.sh | sh
-> ```
-
 You'll need the following API keys ready:
-- Tavily API Key
+- company API Key
 - Google Gemini API Key
 - OpenAI API Key
 - Google Maps API Key
@@ -170,8 +154,8 @@ If you prefer to set up manually, follow these steps:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/pogjester/tavily-company-research.git
-cd tavily-company-research
+git clone https://github.com/ai-joon/company-research-agent.git
+cd company-research-agent
 ```
 
 2. Install backend dependencies:
@@ -208,7 +192,7 @@ This project requires two separate `.env` files for the backend and frontend.
 Create a `.env` file in the project's root directory and add your backend API keys:
 
 ```env
-TAVILY_API_KEY=your_tavily_key
+company_API_KEY=your_company_key
 GEMINI_API_KEY=your_gemini_key
 OPENAI_API_KEY=your_openai_key
 
@@ -238,8 +222,8 @@ The application can be run using Docker and Docker Compose:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/pogjester/tavily-company-research.git
-cd tavily-company-research
+git https://github.com/ai-joon/company-research-agent.git
+cd company-research-agent
 ```
 
 2. **Set up Environment Variables**:
@@ -251,7 +235,7 @@ The Docker setup uses two separate `.env` files.
 Create a `.env` file in the project's root directory with your backend API keys:
 
 ```env
-TAVILY_API_KEY=your_tavily_key
+company_API_KEY=your_company_key
 GEMINI_API_KEY=your_gemini_key
 OPENAI_API_KEY=your_openai_key
 
@@ -363,12 +347,12 @@ The application can be deployed to various cloud platforms. Here are some common
 
 2. Initialize EB application:
    ```bash
-   eb init -p python-3.11 tavily-research
+   eb init -p python-3.11 company-research
    ```
 
 3. Create and deploy:
    ```bash
-   eb create tavily-research-prod
+   eb create company-research-prod
    ```
 
 #### Other Deployment Options
@@ -378,16 +362,3 @@ The application can be deployed to various cloud platforms. Here are some common
 - **Google Cloud Run**: Suitable for containerized deployment with automatic scaling
 
 Choose the platform that best suits your needs. The application is platform-agnostic and can be hosted anywhere that supports Python web applications.
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Acknowledgments
-
-- [Tavily](https://tavily.com/) for the research API
-- All other open-source libraries and their contributors
