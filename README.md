@@ -1,6 +1,6 @@
 
 
-# Company Research Agent
+# Multi Agent System for Company Research
 
 ![web ui](<static/ui-1.png>)
 
