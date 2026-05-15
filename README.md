@@ -122,7 +122,7 @@ The easiest way to get started is using the setup script, which automatically de
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/ai-joon/company-research-agent.git
+git clone https://github.com/agruai/company-research-agent.git
 cd company-research-agent
 ```
 
@@ -154,7 +154,7 @@ If you prefer to set up manually, follow these steps:
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/ai-joon/company-research-agent.git
+git clone https://github.com/agruai/company-research-agent.git
 cd company-research-agent
 ```
 
@@ -222,7 +222,7 @@ The application can be run using Docker and Docker Compose:
 
 1. Clone the repository:
 ```bash
-git https://github.com/ai-joon/company-research-agent.git
+git https://github.com/agruai/company-research-agent.git
 cd company-research-agent
 ```
 
