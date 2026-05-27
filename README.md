@@ -2,7 +2,7 @@
 
 # Multi Agent System for Company Research
 
-![web ui](<static/ui-1.png>)
+![Project Screenshot]([https://example.com/image.png](https://miro.medium.com/v2/resize:fit:720/format:webp/1*rpdvulPNQ5CQOJJXF2xS-g.png))
 
 A multi-agent tool that generates comprehensive company research reports. The platform uses a pipeline of AI agents to gather, curate, and synthesize information about any company.
 
